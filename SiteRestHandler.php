@@ -56,7 +56,6 @@ class SiteRestHandler extends SimpleRest {
     }
     
     public function getSite($id) {
- 
         $site = new Site();
         $rawData = $site->getSite($id);
  
