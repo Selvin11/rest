@@ -35,7 +35,9 @@ class SiteRestHandler extends SimpleRest {
     
         $htmlResponse = "<table border='1'>";
         foreach($responseData as $key=>$value) {
-                $htmlResponse .= "<tr><td>". $key. "</td><td>". $value. "</td></tr>";
+            if (!is_int($key)) {
+                 $htmlResponse .= "<tr><td>". $key. "</td><td>". $value. "</td></tr>";
+            }
         }
         $htmlResponse .= "</table>";
         return $htmlResponse;        
@@ -58,7 +60,6 @@ class SiteRestHandler extends SimpleRest {
     public function getSite($id) {
         $site = new Site();
         $rawData = $site->getSite($id);
- 
         if(empty($rawData)) {
             $statusCode = 404;
             $rawData = array('error' => 'No sites found!');        

@@ -3,7 +3,10 @@
  * 菜鸟教程 RESTful 演示实例
  * RESTful 服务类
  */
-Class Site {
+
+require_once("db.php");
+
+Class Site{
     
     private $sites = array(
         1 => 'TaoBao',  
@@ -21,9 +24,11 @@ Class Site {
     }
     
     public function getSite($id){
-        
-        $site = array($id => ($this->sites[$id]) ? $this->sites[$id] : $this->sites[1]);
+        $db = new DbHandle();
+        $site = $db->getSingle($id);
+        // $site = array($id => ($this->sites[$id]) ? $this->sites[$id] : $this->sites[1]);
         return $site;
-    }    
+    } 
+
 }
 ?>
