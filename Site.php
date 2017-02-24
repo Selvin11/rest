@@ -20,7 +20,9 @@ Class Site{
         
     
     public function getAllSite(){
-        return $this->sites;
+        $db = new DbHandle();
+        $sites = $db->getAll();
+        return $sites;
     }
     
     public function getSite($id){
@@ -30,5 +32,10 @@ Class Site{
         return $site;
     } 
 
+    public function postSite($title,$content){
+        $db = new DbHandle();
+        $site = $db->postSingle($title,$content);
+        return $site;
+    }
 }
 ?>

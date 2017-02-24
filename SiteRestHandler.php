@@ -35,7 +35,14 @@ class SiteRestHandler extends SimpleRest {
     
         $htmlResponse = "<table border='1'>";
         foreach($responseData as $key=>$value) {
-            if (!is_int($key)) {
+            if(is_array($value)){
+                foreach ($value as $k => $val) {
+                    if (!is_int($k)) {
+                        $htmlResponse .= "<tr><td>". $k. "</td><td>". $val. "</td></tr>";
+                    }
+                    
+                }
+            }else if (!is_int($key)) {
                  $htmlResponse .= "<tr><td>". $key. "</td><td>". $value. "</td></tr>";
             }
         }
@@ -67,6 +74,32 @@ class SiteRestHandler extends SimpleRest {
             $statusCode = 200;
         }
  
+        $requestContentType = $_SERVER['HTTP_ACCEPT'];
+        $this ->setHttpHeaders($requestContentType, $statusCode);
+                
+        if(strpos($requestContentType,'application/json') !== false){
+            $response = $this->encodeJson($rawData);
+            echo $response;
+        } else if(strpos($requestContentType,'text/html') !== false){
+            $response = $this->encodeHtml($rawData);
+            echo $response;
+        } else if(strpos($requestContentType,'application/xml') !== false){
+            $response = $this->encodeXml($rawData);
+            echo $response;
+        }
+    }
+
+    public function postSite($title,$content){
+        $site = new Site();
+        $rawData = $site->postSite($title,$content);
+
+        if(empty($rawData)) {
+            $statusCode = 404;
+            $rawData = array('error' => 'No sites found!');        
+        } else {
+            $statusCode = 200;
+        }
+        
         $requestContentType = $_SERVER['HTTP_ACCEPT'];
         $this ->setHttpHeaders($requestContentType, $statusCode);
                 
