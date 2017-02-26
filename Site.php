@@ -37,5 +37,18 @@ Class Site{
         $site = $db->postSingle($title,$content);
         return $site;
     }
+
+    public function putSite($id,$title,$content){
+        $db = new DbHandle();
+        $site = $db->putSingle($id,$title,$content);
+        return $site;
+    }
+
+    public function deleteSite($id){
+        $db = new DbHandle();
+        $site = $db->deleteSingle($id);
+        return $site; 
+    }
+
 }
 ?>

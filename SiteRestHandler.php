@@ -114,5 +114,59 @@ class SiteRestHandler extends SimpleRest {
             echo $response;
         }
     }
+
+    public function putSite($id,$title,$content){
+        $site = new Site();
+        $rawData = $site->putSite($id,$title,$content);
+
+        if(empty($rawData)) {
+            $statusCode = 404;
+            $rawData = array('error' => 'No sites found!');        
+        } else {
+            $statusCode = 200;
+        }
+        
+        $requestContentType = $_SERVER['HTTP_ACCEPT'];
+        $this ->setHttpHeaders($requestContentType, $statusCode);
+                
+        if(strpos($requestContentType,'application/json') !== false){
+            $response = $this->encodeJson($rawData);
+
+            echo $response;
+        } else if(strpos($requestContentType,'text/html') !== false){
+            $response = $this->encodeHtml($rawData);
+            echo $response;
+        } else if(strpos($requestContentType,'application/xml') !== false){
+            $response = $this->encodeXml($rawData);
+            echo $response;
+        }
+    } 
+
+    public function deleteSite($id){
+        $site = new Site();
+        $rawData = $site->deleteSite($id);
+
+        if(empty($rawData)) {
+            $statusCode = 404;
+            $rawData = array('error' => 'No sites found!');        
+        } else {
+            $statusCode = 200;
+        }
+        
+        $requestContentType = $_SERVER['HTTP_ACCEPT'];
+        $this ->setHttpHeaders($requestContentType, $statusCode);
+                
+        if(strpos($requestContentType,'application/json') !== false){
+            $response = $this->encodeJson($rawData);
+
+            echo $response;
+        } else if(strpos($requestContentType,'text/html') !== false){
+            $response = $this->encodeHtml($rawData);
+            echo $response;
+        } else if(strpos($requestContentType,'application/xml') !== false){
+            $response = $this->encodeXml($rawData);
+            echo $response;
+        }
+    }  
 }
 ?>

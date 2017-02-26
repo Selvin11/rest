@@ -22,7 +22,7 @@ switch ($method) {
             break;
             
         case "single":
-            // 处理 REST Url /site/show/<id>/
+            // 处理 REST Url  GET /site/id/
             $siteRestHandler = new SiteRestHandler();
             $siteRestHandler->getSite($_GET["id"]);
             break;
@@ -34,10 +34,24 @@ switch ($method) {
         break;
         
     case 'POST':
-        // 处理 REST Url /site/postlist/
+        // 处理 REST Url  POST /site/list/
         $siteRestHandler = new SiteRestHandler();
         $siteRestHandler->postSite($_GET["title"],$_GET["content"]);
         break;
+
+    case 'PUT':
+        // 处理 REST URL  PUT /site/list/id/
+        if ($view == "single") {
+            $siteRestHandler = new SiteRestHandler();
+            $siteRestHandler->putSite($_GET["id"],$_GET["title"],$_GET["content"]);
+        }
+
+    case "DELETE":
+        // 处理 REST URL  DELETE /site/list/id/
+        if ($view == "single") {
+            $siteRestHandler = new SiteRestHandler();
+            $siteRestHandler->deleteSite($_GET["id"]);
+        }
 
     case "" :
         //404 - not found;
