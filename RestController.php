@@ -34,11 +34,16 @@ switch ($method) {
         break;
         
     case 'POST':
+            $siteRestHandler = new SiteRestHandler();
+            $siteRestHandler->postSite($_GET["title"],$_GET["content"]);
+        break;
+
+    case "PUT":
          // 处理 REST URL  PUT /site/list/id/
         if ($view == "single") {
             $json = file_get_contents('php://input');
             $data = json_decode($json,true);
-            var_dump($data);
+            var_dump($data["title"]);
 
             $siteRestHandler = new SiteRestHandler();
             if ($data == NULL) {
@@ -46,13 +51,8 @@ switch ($method) {
             }else{
                 $siteRestHandler->putSite($data["id"],$data["title"],$data["content"]);
             }
-        }else{
-            // 处理 REST Url  POST /site/list/
-            $siteRestHandler = new SiteRestHandler();
-            $siteRestHandler->postSite($_GET["title"],$_GET["content"]);
         }
         break;
-
     
     case "DELETE":
         // 处理 REST URL  DELETE /site/list/id/
