@@ -38,7 +38,6 @@ switch ($method) {
             // 处理 REST URL  PUT /api/list/id/  以post方式更新单条数据
             $res = new Response();
             if ($view == "single") {
-                var_dump(2);
                 $res->putOne($_GET["id"],$_GET["title"],$_GET["content"],$_GET["complete"]);
             }else{
                 // 处理 REST Url  POST /api/list/ 增加一条数据

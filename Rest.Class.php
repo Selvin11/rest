@@ -55,7 +55,7 @@
                     // 获取单条数据，只包含键名不含数字PDO::FETCH_ASSOC
                     $row = $stmt->fetch();
                    }
-                   var_dump($row);
+                   // var_dump($row);
                 return $row;
             } catch (PDOException $e) {
                 die ("Error!: " . $e->getMessage() . "<br/>");
@@ -107,6 +107,4 @@
     }
 
 
-    // $site = new Rest();
-    // $site->getAll();
  ?>
