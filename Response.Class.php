@@ -1,24 +1,87 @@
 <?php 
+require_once("Rest.Class.php");
 /**
 *  获取请求头类型，传入数据库访问返回的数据，对其转码输出给请求方
 */
-class encodeData
+class Response
 {
     private $httpVersion = "HTTP/1.1";
     
-    function __construct()
+
+    // GET 返回所有数据
+    public function getAll()
     {
-        # code...
+        $rest = new Rest();
+        $rowData = $rest->getAll();
+        $this->encodeData($rowData);
+    }
+    // GET 返回对应ID的单条数据
+    public function getOne($id)
+    {
+        $rest = new Rest();
+        $rowData = $rest->getOne($id);
+        $this->encodeData($rowData);
     }
 
+    // POST 增加单条数据
+    public function postOne($title,$content)
+    {
+        $rest = new Rest();
+        $rowData = $rest->postOne($title,$content);
+        $this->encodeData($rowData);
+    }
+    // PUT 更新单条数据
+    public function putOne($id,$title,$content,$complete)
+    {
+        $rest = new Rest();
+        $rowData = $rest->putOne($id,$title,$content,$complete);
+        $this->encodeData($rowData);
+    }
+    // DELETE 删除单条数据
+    public function deleteOne($id)
+    {
+        $rest = new Rest();
+        $rowData = $rest->deleteOne($id);
+        $this->encodeData($rowData);
+    }
+    /**
+     * 对数据库查询返回的数据进行类型转化，将数组转为html、json、xml等
+     * @param [type] $contentType [text/html application/json]
+     * @param [type] $statusCode  [100 - 500]
+     * @param [type] $rawData  [传入数据库返回数据]
+     */
+    public function encodeData($rawData){
 
-    
-    public function setHttpHeaders($contentType, $statusCode){
+        if(empty($rawData)) {
+            $statusCode = 404;
+            $rawData = array('error' => 'No sites found!');        
+        } else {
+            $statusCode = 200;
+        }
+        // 获取请求接受类型 Accept
+        $requestContentType = $_SERVER['HTTP_ACCEPT'];
         
-        $statusMessage = $this -> getHttpStatusMessage($statusCode);
+
+        $statusMessage = $this->getHttpStatusMessage($statusCode);
         
+        // 根据请求的头部类型设置返回数据头部信息 http协议版本，状态码及对应的信息，返回的content-Type类型
+        header("Content-Type:". $requestContentType);
         header($this->httpVersion. " ". $statusCode ." ". $statusMessage);        
-        header("Content-Type:". $contentType);
+        
+
+        // 对数据转化 $response 返回的数据
+        // strpos函数 查找字符串首次出现的位置，找到返回 0，未找到返回false
+
+        if(strpos($requestContentType,'application/json') !== false){
+            $response = json_encode($rawData);
+            echo $response;
+        } else if(strpos($requestContentType,'text/html') !== false){
+            $response = $this->encodeHtml($rawData);
+            echo $response;
+        } else if(strpos($requestContentType,'application/xml') !== false){
+            $response = $this->encodeXml($rawData);
+            echo $response;
+        }
     }
     
     public function getHttpStatusMessage($statusCode){
@@ -73,17 +136,13 @@ class encodeData
      * @return [type]               [description]
      */
     public function encodeHtml($responseData) {
-    
-        $htmlResponse = "<table border='1'>";
+        $htmlResponse = "<table border='1' style='border-collapse:collapse;'>";
         foreach($responseData as $key=>$value) {
             if(is_array($value)){
                 foreach ($value as $k => $val) {
-                    if (!is_int($k)) {
-                        $htmlResponse .= "<tr><td>". $k. "</td><td>". $val. "</td></tr>";
-                    }
-                    
+                    $htmlResponse .= "<tr><td>". $k. "</td><td>". $val. "</td></tr>";
                 }
-            }else if (!is_int($key)) {
+            }else {
                  $htmlResponse .= "<tr><td>". $key. "</td><td>". $value. "</td></tr>";
             }
         }
@@ -91,10 +150,10 @@ class encodeData
         return $htmlResponse;        
     }
     
-    public function encodeJson($responseData) {
-        $jsonResponse = json_encode($responseData);
-        return $jsonResponse;        
-    }
+    // public function encodeJson($responseData) {
+    //     $jsonResponse = json_encode($responseData);
+    //     return $jsonResponse;        
+    // }
     
     public function encodeXml($responseData) {
         // 创建 SimpleXMLElement 对象
@@ -105,6 +164,5 @@ class encodeData
         return $xml->asXML();
     }
 }
-
 
  ?>

@@ -1,30 +1,29 @@
 <?php
-require_once("SiteRestHandler.php");
+require_once("Response.Class.php");
         
-$view = "";
-if(isset($_GET["view"]))
-    $view = $_GET["view"];
 /*
  * RESTful service 控制器
  * URL 映射
 */
-
+$view = "";
+if(isset($_GET["view"]))
+    $view = $_GET["view"];
 $method = $_SERVER['REQUEST_METHOD'];
+
 switch ($method) {
-    
     case 'GET':
     switch($view){
-     
         case "all":
-            // 处理 REST Url /site/list/
-            $siteRestHandler = new SiteRestHandler();
-            $siteRestHandler->getAllSites();
+            // 处理 REST Url /api/list/
+            
+            $res = new Response();
+            $res->getAll();
             break;
             
         case "single":
-            // 处理 REST Url  GET /site/id/
-            $siteRestHandler = new SiteRestHandler();
-            $siteRestHandler->getSite($_GET["id"]);
+            // 处理 REST Url  GET /api/id/
+            $res = new Response();
+            $res->getOne($_GET["id"]);
             break;
 
         case "" :
@@ -32,33 +31,40 @@ switch ($method) {
             break;
     }
         break;
+
+    // POST 请求
         
     case 'POST':
-            $siteRestHandler = new SiteRestHandler();
-            $siteRestHandler->postSite($_GET["title"],$_GET["content"]);
+            // 处理 REST URL  PUT /api/list/id/  以post方式更新单条数据
+            $res = new Response();
+            if ($view == "single") {
+                var_dump(2);
+                $res->putOne($_GET["id"],$_GET["title"],$_GET["content"],$_GET["complete"]);
+            }else{
+                // 处理 REST Url  POST /api/list/ 增加一条数据
+                $res->postOne($_GET["title"],$_GET["content"]);
+            }
         break;
 
     case "PUT":
-         // 处理 REST URL  PUT /site/list/id/
+         // 处理 REST URL  PUT /api/list/id/
         if ($view == "single") {
             $json = file_get_contents('php://input');
             $data = json_decode($json,true);
-            var_dump($data["title"]);
 
-            $siteRestHandler = new SiteRestHandler();
-            if ($data == NULL) {
-                $siteRestHandler->putSite($_GET["id"],$_GET["title"],$_GET["content"]);
-            }else{
-                $siteRestHandler->putSite($data["id"],$data["title"],$data["content"]);
-            }
+            $res = new Response();
+            // var_dump($data["complete"]);
+            $res->putOne($data["id"],$data["title"],$data["content"],$data["complete"]);
         }
         break;
     
     case "DELETE":
-        // 处理 REST URL  DELETE /site/list/id/
+        // 处理 REST URL  DELETE /api/list/id/
         if ($view == "single") {
-            $siteRestHandler = new SiteRestHandler();
-            $siteRestHandler->deleteSite($_GET["id"]);
+            $json = file_get_contents('php://input');
+            $data = json_decode($json,true);
+            $res = new Response();
+            $res->deleteOne($data["id"]);
         }
         break;
         

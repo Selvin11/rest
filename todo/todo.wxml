@@ -1,0 +1,11 @@
+<!--pages/todos/todos.wxml-->
+<view class="container todo-list">
+  <block wx:for="{{todos}}" wx:for-item="todo" wx:key="todo.id">
+    <view class="todo-item">
+      <icon bindtap="toggleTodo" data-todo="{{todo}}" class="icon" type="success" wx:if="{{todo.complete==1}}"></icon>
+      <icon bindtap="toggleTodo" data-todo="{{todo}}" class="icon" type="success_circle" wx:if="{{todo.complete==0}}"></icon>
+      <text bindtap="toggleTodo" data-todo="{{todo}}" class="desc">{{todo.title}}</text>
+      <icon bindtap="removeTodo" data-todo="{{todo}}" class="remove" type="clear"></icon>
+    </view>
+  </block>
+</view>
