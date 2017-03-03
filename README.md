@@ -29,10 +29,10 @@
     RewriteEngine on
 
     # 重写规则
-    # http://localhost/项目名/site/list/  跳转至  http://localhost/项目名/RestController.php?view=all
-    RewriteRule ^site/list/$   RestController.php?view=all [nc,qsa]
-    # http://localhost/项目名/site/list/1/  跳转至  http://localhost/项目名/RestController.php?view=single&id=1
-    RewriteRule ^site/list/([0-9]+)/$   RestController.php?view=single&id=$1 [nc,qsa]
+    # http://localhost/项目名/api/list/  跳转至  http://localhost/项目名/RestController.php?view=all
+    RewriteRule ^api/list/$   RestController.php?view=all [nc,qsa]
+    # http://localhost/项目名/api/list/1/  跳转至  http://localhost/项目名/RestController.php?view=single&id=1
+    RewriteRule ^api/list/([0-9]+)/$   RestController.php?view=single&id=$1 [nc,qsa]
 
 
   ```
@@ -43,7 +43,7 @@
 
 * 实现RESTFUL中的增删改查的基本接口
 
-* 改进`Rest`和`Respon`类，更加直观简洁，能迅速了解`GET`/`POST`/`PUT`/`DELETE`对应的`RestFul`接口
+* 改进`Rest`和`Response`类，更加直观简洁，能迅速了解`GET`/`POST`/`PUT`/`DELETE`对应的`RestFul`接口
 
 * PDO 查询MySQL返回字段整型（int）变为字符串型（String）解决方法
   ```php

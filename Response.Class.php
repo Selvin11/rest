@@ -67,7 +67,8 @@ class Response
         // 根据请求的头部类型设置返回数据头部信息 http协议版本，状态码及对应的信息，返回的content-Type类型
         header("Content-Type:". $requestContentType);
         header($this->httpVersion. " ". $statusCode ." ". $statusMessage);        
-        
+        // 跨域设置 测试用
+        header("Access-Control-Allow-Origin:*");
 
         // 对数据转化 $response 返回的数据
         // strpos函数 查找字符串首次出现的位置，找到返回 0，未找到返回false
